@@ -7,6 +7,7 @@ import MealItem from "./MealItem/MealItem";
 const AvailableMeals = (props) => {
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState();
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -14,6 +15,11 @@ const AvailableMeals = (props) => {
       const response = await fetch(
         "https://customhook-http-ba6e3-default-rtdb.firebaseio.com/meals.json"
       );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+
       const responseData = await response.json();
 
       const loadedMeals = [];
@@ -30,7 +36,10 @@ const AvailableMeals = (props) => {
       setIsLoading(false);
     };
 
-    fetchMeals();
+    fetchMeals().catch((error) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
   }, []);
 
   if (isLoading) {
@@ -40,6 +49,15 @@ const AvailableMeals = (props) => {
       </section>
     );
   }
+
+  if (httpError) {
+    return (
+      <section className={styles.MealsError}>
+        <p>{httpError}</p>
+      </section>
+    );
+  }
+
   const mealsList = meals.map((meal) => (
     <MealItem
       id={meal.id}
