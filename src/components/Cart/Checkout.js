@@ -43,22 +43,27 @@ const Checkout = (props) => {
       ennteredCityIsValid &&
       enteredPostalCodeIsValid;
 
-    if (formIsValid) {
+    if (!formIsValid) {
       return;
     }
-    // Submit cart data
+    props.onConfirm({
+      name: enteredName,
+      street: enteredStreet,
+      postalCode: enteredPostalCode,
+      city: enteredCity,
+    });
   };
 
-  const nameControlStyles = `${styles["form-control"]} ${
+  const nameControlStyles = `${styles.control} ${
     formInputValidity.name ? "" : styles.invalid
   }`;
-  const streetControlStyles = `${styles["form-control"]} ${
+  const streetControlStyles = `${styles.control} ${
     formInputValidity.street ? "" : styles.invalid
   }`;
-  const postalCodeControlStyles = `${styles["form-control"]} ${
+  const postalCodeControlStyles = `${styles.control} ${
     formInputValidity.postalCode ? "" : styles.invalid
   }`;
-  const cityControlStyles = `${styles["form-control"]} ${
+  const cityControlStyles = `${styles.control} ${
     formInputValidity.city ? "" : styles.invalid
   }`;
 
@@ -67,24 +72,24 @@ const Checkout = (props) => {
       <div className={nameControlStyles}>
         <label htmlFor="name">Your Name</label>
         <input type="text" id="name" ref={nameInputRef} />
-        {formInputValidity.name && <p>Please enter a valid name!</p>}
+        {!formInputValidity.name && <p>Please enter a valid name!</p>}
       </div>
       <div className={streetControlStyles}>
         <label htmlFor="street">Street</label>
         <input type="text" id="street" ref={streetInputRef} />
-        {formInputValidity.street && <p>Please enter a valid street!</p>}
+        {!formInputValidity.street && <p>Please enter a valid street!</p>}
       </div>
       <div className={postalCodeControlStyles}>
         <label htmlFor="postal">Postal Code</label>
         <input type="text" id="postal" ref={postalCodeInputRef} />
-        {formInputValidity.postalCode && (
+        {!formInputValidity.postalCode && (
           <p>Please enter a valid postal code!(5 characters long)</p>
         )}
       </div>
       <div className={cityControlStyles}>
         <label htmlFor="city">City</label>
         <input type="text" id="city" ref={cityInputRef} />
-        {formInputValidity.city && <p>Please enter a valid city!</p>}
+        {!formInputValidity.city && <p>Please enter a valid city!</p>}
       </div>
       <div className={styles.actions}>
         <button type="button" onClick={props.onCancel}>
